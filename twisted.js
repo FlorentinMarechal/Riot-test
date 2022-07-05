@@ -12,11 +12,11 @@ const configTft = {
 
 export async function getSummonerTft () {
     const data = await api.Summoner.getByName(configTft.summonerName, configTft.region)
-    // console.log("data: ", data);
+    console.log("data: ", data);
     return data
   }
 
-//getSummonerTft();
+getSummonerTft();
 
 export async function matchListDetailsTft () {
     const puuidKey = (await getSummonerTft()).response.puuid;
