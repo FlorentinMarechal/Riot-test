@@ -1,13 +1,32 @@
 import fetch from "node-fetch";
 
-const test = async () => {
-    const name = "KC%20Flooo"
-    const apiKey = "RGAPI-4a1c7dcf-fdf7-473c-a70c-aa6f36da033d"
-    const response = await fetch(`https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-name/${name}?api_key=${apiKey}`);
+const config = {
+    name: "KC Flooo",
+    apiKey: "RGAPI-fe279972-4abe-4d0b-9a4d-9b978e4bd3c4"
+}
+
+const getPuuid = async () => {
+    const response = await fetch(`https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-name/${config.name}?api_key=${config.apiKey}`);
     const data = await response.json();
-    console.log(data);
+    // console.log("puuid", data);
+    return data.puuid;
+}
+
+// getSummoner();
+
+const getMatchList = async () => {
+    const puuid = await getPuuid()
+    const response = await fetch(`https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/${puuid}/ids?start=0&count=20&api_key=${config.apiKey}`);
+    const data = await response.json();
+    // console.log("match id", data);
     return data;
 }
 
-test();
+const getMatchData = async () => {
+    const matchList = await getMatchList();
+    for (const match of matchList) {
+        
+    }
+}
 
+console.log(matchList);
