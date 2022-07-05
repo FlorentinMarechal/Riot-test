@@ -12,28 +12,42 @@ const configTft = {
 
 export async function getSummonerTft () {
     const data = await api.Summoner.getByName(configTft.summonerName, configTft.region)
+    // console.log("data: ", data);
     return data
   }
 
-
+//getSummonerTft();
 
 export async function matchListDetailsTft () {
-    const puuidKey = await (await getSummonerTft()).response.puuid;
+    const puuidKey = (await getSummonerTft()).response.puuid;
     const {
       response: {
         puuid = puuidKey
       }
     } = await getSummonerTft()
     const data = await api.Match.listWithDetails(puuid, configTft.tftRegion)
-    console.log("data match: ",data.length );
-    const matchList = [];
+    const matchId = [];
     for(const match of data){
-        matchList.push(match.metadata.match_id);
+        matchId.push(match.metadata.match_id);
     }
-    console.log(matchList);
-    return matchList
+    // console.log(matchId);
+    return matchId
   }
 
-matchListDetailsTft();
+export async function matchDetailsTft () {
+    const puuidKey = (await getSummonerTft()).response.puuid;
+    const {
+      response: {
+        puuid = puuidKey
+      }
+    } = await getSummonerTft()
+    const {
+      response: [matchId] = matchListDetailsTft()
+    } = await api.Match.list(puuid, configTft.tftRegion)
+    const data = await api.Match.get(matchId, configTft.tftRegion);
+    console.log("data match: ", data);
+}
 
-dzada
+matchDetailsTft();
+
+// https://developer.riotgames.com/apis#tft-match-v1/GET_getMatch
