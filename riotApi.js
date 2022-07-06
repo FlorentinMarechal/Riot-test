@@ -24,9 +24,17 @@ const getMatchList = async () => {
 
 const getMatchData = async () => {
     const matchList = await getMatchList();
-    for (const match of matchList) {
-        
-    }
+    const puuid = await getPuuid();
+    const response = await fetch(`https://europe.api.riotgames.com/tft/match/v1/matches/${matchList[0]}?api_key=${config.apiKey}`)
+    const data = await response.json();
+    console.log("match data: ",data.info.participants);
+    
+    const champPlayed = data.map(matchData => {
+        if(matchData.puuid !== puuid) return
+        /* 
+        Creer un objet trait, un objet units
+        */
+    })
 }
 
-console.log(matchList);
+getMatchData();
