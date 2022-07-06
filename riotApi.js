@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 
 const config = {
     name: "KC Flooo",
-    apiKey: "RGAPI-fe279972-4abe-4d0b-9a4d-9b978e4bd3c4"
+    apiKey: "RGAPI-971fca2e-7a7d-4b88-81f1-9f4c8c18f96b"
 }
 
 const getPuuid = async () => {
@@ -27,14 +27,22 @@ const getMatchData = async () => {
     const puuid = await getPuuid();
     const response = await fetch(`https://europe.api.riotgames.com/tft/match/v1/matches/${matchList[0]}?api_key=${config.apiKey}`)
     const data = await response.json();
-    console.log("match data: ",data.info.participants);
-    
-    const champPlayed = data.map(matchData => {
-        if(matchData.puuid !== puuid) return
-        /* 
-        Creer un objet trait, un objet units
-        */
-    })
+    console.log(data);
+    const gameInfo = {
+        traits:"",
+        units:"",
+        match_id:data.metadata.match_id
+    }
+    // console.log(gameInfo);
+    const matchData = data.info.participants;
+    console.log("matchData: ",matchData);
+    matchData.forEach(match => {
+        if(match.puuid !== puuid) return;
+        gameInfo.traits = match.traits;
+        gameInfo.units = match.units;
+    });
+    console.log("gameInfo: ", gameInfo);
+   
 }
 
 getMatchData();
