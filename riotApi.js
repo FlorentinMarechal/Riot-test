@@ -3,7 +3,7 @@
 import fetch from "node-fetch";
 
 const config = {
-    apiKey: "RGAPI-88d13619-22cd-4db8-b7df-7b6b808a4636"
+    apiKey: "RGAPI-18864279-a9ec-472f-ad8d-96079edbbf8d"
 }
 
 // FUNCTIONS
@@ -27,11 +27,10 @@ const getMatchData = async (matchId, puuid) => {
     // const puuid = await getPuuid();
     const response = await fetch(`https://europe.api.riotgames.com/tft/match/v1/matches/${matchId}?api_key=${config.apiKey}`)
     const data = await response.json();
-    // console.log(data);
+    console.log(data);
     const gameInfo = {
         traits:"",
-        units:"",
-        match_id:data.metadata.match_id
+        units:""
     }
     // console.log(gameInfo);
     const matchData = data.info.participants;
@@ -61,10 +60,7 @@ const unitStat = (historicInfo) => {
     for(const match of historicInfo) {
         const units = match.units;
         units.forEach(unit => {
-            if(unitCount.includes(unit)) {
-                
-            }
-            unitCount.push({name: unit.character_id, count: 1});
+            unitCount.push(unit.character_id);
         });
     }
     return unitCount;
@@ -78,11 +74,11 @@ const puuid = await getPuuid(name);
 
 const matchList = await getMatchList(puuid);
 
-// console.log("matchList: ", matchList);
+console.log("matchList: ", matchList);
 
 const historicInfo = await createHistoricArray(matchList);
 
-// console.log("historic Info: ", historicInfo[0].units);
+// console.log("historic Info: ", historicInfo);
 
 const unitCount = await unitStat(historicInfo);
 
