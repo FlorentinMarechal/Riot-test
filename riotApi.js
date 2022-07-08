@@ -1,8 +1,12 @@
+// CONFIG
+
 import fetch from "node-fetch";
 
 const config = {
-    apiKey: "RGAPI-971fca2e-7a7d-4b88-81f1-9f4c8c18f96b"
+    apiKey: "RGAPI-88d13619-22cd-4db8-b7df-7b6b808a4636"
 }
+
+// FUNCTIONS
 
 const getPuuid = async (name) => {
     const response = await fetch(`https://euw1.api.riotgames.com/tft/summoner/v1/summoners/by-name/${name}?api_key=${config.apiKey}`);
@@ -10,12 +14,6 @@ const getPuuid = async (name) => {
     // console.log("puuid", data);
     return data.puuid;
 }
-
-// getSummoner();
-
-/* 
-Remplacer les appels à fonction par des paramétres 
-*/
 
 const getMatchList = async (puuid) => {
     const response = await fetch(`https://europe.api.riotgames.com/tft/match/v1/matches/by-puuid/${puuid}/ids?start=0&count=20&api_key=${config.apiKey}`);
@@ -47,25 +45,45 @@ const getMatchData = async (matchId, puuid) => {
     return gameInfo;
 }
 
+const createHistoricArray = async (matchList) => {
+    const historicInfo = [];
+
+    for(const matchId of matchList) {
+        const gameInfo = await getMatchData(matchId, puuid);
+        historicInfo.push(gameInfo);
+    }
+    // console.log("final data: ", historicInfo);
+    return historicInfo;
+}
+
+const unitStat = (historicInfo) => {
+    const unitCount = [];
+    for(const match of historicInfo) {
+        const units = match.units;
+        units.forEach(unit => {
+            if(unitCount.includes(unit)) {
+                
+            }
+            unitCount.push({name: unit.character_id, count: 1});
+        });
+    }
+    return unitCount;
+}
+
+// PROGRAMME
+
 const name = "KC Flooo"
 
 const puuid = await getPuuid(name);
 
 const matchList = await getMatchList(puuid);
 
-const historicInfo = [];
+// console.log("matchList: ", matchList);
 
-// matchList.forEach(matchId => {
-//     const gameInfo = await getMatchData(matchId, puuid);
-//     historicInfo.push(gameInfo);
-// })
+const historicInfo = await createHistoricArray(matchList);
 
-const createHistoricArray = async () => {
-    for(const matchId of matchList) {
-        const gameInfo = await getMatchData(matchId, puuid);
-        historicInfo.push(gameInfo);
-    }
-    console.log("final data: ", historicInfo);
-}
+// console.log("historic Info: ", historicInfo[0].units);
 
-createHistoricArray();
+const unitCount = await unitStat(historicInfo);
+
+console.log(unitCount);
