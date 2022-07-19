@@ -53,8 +53,8 @@ const obj = {
     TFT7_Anivia: 1
   };
 
-  const obj2 = {};
 
-  obj2.push("a");
 
-  console.log(obj2);
+  const a = "TFT7_Orn"
+
+  console.log(a.split("_").pop());

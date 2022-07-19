@@ -3,7 +3,7 @@
 import fetch from "node-fetch";
 
 const config = {
-    apiKey: "RGAPI-64a445c6-b0b1-4ffa-a8c4-3b5e43e1a9cc",
+    apiKey: "RGAPI-137bb974-3ae1-4184-b346-d66aa9564010",
     gameCount: 15
 }
 
@@ -72,17 +72,21 @@ const unitStat = (historicInfo) => {
 }
 
 const makeStat = (unitCount) => {
-    const unitCountArray = [];
-    for(const unit of unitCount) {
-        unitCountArray.push(unit)
-    }
-    console.log("Pas trier: ",unitCountArray);
-    console.log("Trier: ",unitCountArray.sort());
+    const finalData = [];
+    for (const [unit, count] of Object.entries(unitCount)) {
+        const percent = Math.round((count*100)/config.gameCount)
+        finalData.push({
+            name: unit.split("_").pop(),
+            percent,
+            count
+        })
+      }
+      return finalData;
 }
 
 // PROGRAMME
 
-const name = "KC Flooo"
+const name = "Lehm Mishaa"
 
 const puuid = await getPuuid(name);
 
@@ -98,6 +102,6 @@ const unitCount = unitStat(historicInfo);
 
 console.log(unitCount);
 
-const sortArray = makeStat(unitCount);
+const finalData = makeStat(unitCount);
 
-console.log(sortArray);
+console.log(finalData);
